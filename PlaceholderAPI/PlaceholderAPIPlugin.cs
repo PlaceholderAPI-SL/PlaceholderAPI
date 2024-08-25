@@ -1,5 +1,6 @@
 ﻿namespace PlaceholderAPI
 {
+    using System;
     using System.IO;
     using Exiled.API.Enums;
     using Exiled.API.Features;
@@ -22,6 +23,15 @@
         public static readonly string ExpansionPath = Path.Combine(Paths.Plugins, "Expansions");
 
         private ECloudDatabase handler;
+
+        /// <inheritdoc/>
+        public override string Name => "PlaceholderAPI";
+
+        /// <inheritdoc/>
+        public override Version Version => new (1,0,0);
+
+        /// <inheritdoc/>
+        public override string Author => "NotZer0Two";
 
         /// <inheritdoc/>
         // Note for the people who are trying to understand why this decision of last but this allows to make all the plugin load
