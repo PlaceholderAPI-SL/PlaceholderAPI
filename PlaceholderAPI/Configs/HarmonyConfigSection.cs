@@ -22,6 +22,8 @@ namespace PlaceholderAPI.Configs
         public Dictionary<string, bool> TagsAllowed { get; set; } = new ()
         {
             ["Hints"] = true,
+            ["Broadcast"] = true,
+            ["CommandInterpolation"] = true,
         };
 
     }
