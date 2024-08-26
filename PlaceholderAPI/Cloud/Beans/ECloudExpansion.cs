@@ -15,7 +15,7 @@
         /// <summary>
         /// Gets or sets the Repoid.
         /// </summary>
-        public long RepoId { get; set; }
+        public long repoid { get; set; }
 
         /// <summary>
         /// Gets all the tag items from a yaml string.

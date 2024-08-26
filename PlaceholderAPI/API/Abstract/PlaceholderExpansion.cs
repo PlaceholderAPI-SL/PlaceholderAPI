@@ -30,7 +30,7 @@
         /// <returns>if the Placeholder is registered.</returns>
         public bool IsRegistered()
         {
-            return (this.RequiredPlugin != null && Loader.Plugins.Any(x => x.Name == this.RequiredPlugin)) && PlaceholderAPI.Placeholders.TryGetValue(this.Identifier, out _);
+            return PlaceholderAPI.Placeholders.TryGetValue(this.Identifier, out _);
         }
 
         /// <summary>
@@ -39,7 +39,8 @@
         /// <returns>Returns if it can be registered.</returns>
         public virtual bool CanRegister()
         {
-            return !PlaceholderAPI.Placeholders.TryGetValue(this.Identifier, out _);
+            return (this.RequiredPlugin == null || Loader.Plugins.Any(x => x.Name == this.RequiredPlugin))
+                    && !PlaceholderAPI.Placeholders.TryGetValue(this.Identifier, out _);
         }
 
         /// <summary>

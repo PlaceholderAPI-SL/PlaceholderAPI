@@ -31,7 +31,7 @@
         {
             using (UnityWebRequest request = UnityWebRequest.Get(releaseUrl))
             {
-                request.SetRequestHeader("User-Agent", "ECloud.Downloader");
+                request.SetRequestHeader("User-Agent", "ECloud");
                 yield return Timing.WaitUntilDone(request.SendWebRequest());
 
                 if (request.result != UnityWebRequest.Result.Success)
@@ -51,7 +51,7 @@
 
                 using (UnityWebRequest downloadRequest = UnityWebRequest.Get(downloadUrl))
                 {
-                    downloadRequest.SetRequestHeader("User-Agent", "UnityApp");
+                    downloadRequest.SetRequestHeader("User-Agent", "ECloud");
                     yield return Timing.WaitUntilDone(downloadRequest.SendWebRequest());
 
                     if (downloadRequest.result != UnityWebRequest.Result.Success)
