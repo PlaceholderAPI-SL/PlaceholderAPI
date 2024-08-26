@@ -10,6 +10,7 @@
     using Exiled.API.Interfaces;
     using Exiled.Loader;
     using global::PlaceholderAPI.API.Abstract;
+    using YamlDotNet.Core.Tokens;
 
     /// <summary>
     /// Main API for comunicating with PAPI.

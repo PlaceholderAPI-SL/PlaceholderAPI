@@ -1,7 +1,9 @@
 ﻿namespace PlaceholderAPI
 {
+    using System.Collections.Generic;
     using System.ComponentModel;
     using Exiled.API.Interfaces;
+    using PlaceholderAPI.Configs;
 
     /// <summary>
     /// Main Config.
@@ -19,5 +21,11 @@
         /// </summary>
         [Description("It connects you to the PlaceholderAPI Ecloud where you can download Expansions without reloading")]
         public bool ConnectToEcloud { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether if Harmony config section.
+        /// </summary>
+        [Description("Config section releated to modify in-game aspects")]
+        public HarmonyConfigSection Harmony { get; set; } = new ();
     }
 }

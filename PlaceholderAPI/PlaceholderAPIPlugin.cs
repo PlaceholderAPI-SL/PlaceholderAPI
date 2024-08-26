@@ -4,6 +4,7 @@
     using System.IO;
     using Exiled.API.Enums;
     using Exiled.API.Features;
+    using HarmonyLib;
     using PlaceholderAPI.Cloud;
     using PlaceholderAPI.Placeholders;
 
@@ -18,6 +19,11 @@
         public static PlaceholderAPIPlugin Instance { get; private set; }
 
         /// <summary>
+        /// Gets the Harmony Instance.
+        /// </summary>
+        public static Harmony HarmonyPatch { get; private set; }
+
+        /// <summary>
         /// The folder containing all the Expansions.
         /// </summary>
         public static readonly string ExpansionPath = Path.Combine(Paths.Plugins, "Expansions");
@@ -28,7 +34,7 @@
         public override string Name => "PlaceholderAPI";
 
         /// <inheritdoc/>
-        public override Version Version => new (1,0,0);
+        public override Version Version => new (1, 0, 0);
 
         /// <inheritdoc/>
         public override string Author => "NotZer0Two";
@@ -54,6 +60,15 @@
                 Log.Info("Setup is completed now Enjoy the plugin.");
             }
 
+            if (this.Config.Harmony.isHarmonyEnabled)
+            {
+                Log.Info("Harmony not loaded! Patching methods...");
+
+                HarmonyPatch = new Harmony($"{this.Name}_v{this.Version}");
+
+                HarmonyPatch.PatchAll();
+            }
+
             new PlayerPlaceholders().Register();
             new ServerPlaceholders().Register();
 
@@ -74,6 +89,12 @@
         /// <inheritdoc/>
         public override void OnDisabled()
         {
+            if (this.Config.Harmony.isHarmonyEnabled)
+            {
+                HarmonyPatch.UnpatchAll();
+                HarmonyPatch = null;
+            }
+
             Instance = null;
             base.OnDisabled();
         }
