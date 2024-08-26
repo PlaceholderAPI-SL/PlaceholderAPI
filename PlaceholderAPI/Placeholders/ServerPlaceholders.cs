@@ -26,8 +26,22 @@
                     return Server.Name;
                 case "ip":
                     return Server.IpAddress;
+                case "port":
+                    return Server.Port.ToString();
                 case "count":
                     return Server.PlayerCount.ToString();
+                case "version":
+                    return Server.Version;
+                case "isverified":
+                    return Server.IsVerified.ToString();
+                case "tps":
+                    return Server.Tps.ToString();
+                case "maxtps":
+                    return ServerStatic.ServerTickrate.ToString();
+                case "friendlyfire":
+                    return Server.FriendlyFire.ToString();
+                case "iswhitelisted":
+                    return Server.IsWhitelisted.ToString();
             }
 
             return null;
