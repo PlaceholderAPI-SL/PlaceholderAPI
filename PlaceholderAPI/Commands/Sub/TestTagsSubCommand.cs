@@ -29,7 +29,7 @@
                 return false;
             }
 
-            response = $"[PAPI] {PlaceholderAPI.SetPlaceholders(Player.Get(sender), string.Join(" ", arguments))}";
+            response = $"[PAPI] {PlaceholderAPI.SetPlaceholders(Player.Get(sender), string.Join(" ", arguments))} %player_name% %server_ip%";
             return true;
         }
     }

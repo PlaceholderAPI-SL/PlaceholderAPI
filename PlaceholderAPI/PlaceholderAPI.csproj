@@ -102,6 +102,7 @@
     <Compile Include="Configs\HarmonyConfigSection.cs" />
     <Compile Include="Patches\CommandInterpolationReplacementPatch.cs" />
     <Compile Include="Patches\BroadcastReplacementPatch.cs" />
+    <Compile Include="Patches\CommandReplacementPatch.cs" />
     <Compile Include="Patches\HintReplacementPatch.cs" />
     <Compile Include="PlaceholderAPIConfig.cs" />
     <Compile Include="PlaceholderAPIPlugin.cs" />
