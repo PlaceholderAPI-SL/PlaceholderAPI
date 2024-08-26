@@ -2,6 +2,7 @@
 {
     using System;
     using CommandSystem;
+    using Exiled.API.Features;
     using Exiled.Permissions.Extensions;
     using PlaceholderAPI.Cloud;
     using PlaceholderAPI.Cloud.Helper;

@@ -29,7 +29,7 @@
                 case "ip":
                     return player.IPAddress;
                 case "dnt":
-                    return player.DoNotTrack ? "Enabled" : "Disabled";
+                    return player.DoNotTrack.ToString();
                 case "health":
                     return player.Health.ToString();
                 case "maxhealth":
@@ -40,6 +40,22 @@
                     return player.RawUserId;
                 case "fullid":
                     return player.UserId;
+                case "auth":
+                    return player.AuthenticationType.ToString();
+                case "iswhitelisted":
+                    return player.IsWhitelisted.ToString();
+                case "hasremoteadmin":
+                    return player.RemoteAdminAccess.ToString();
+                case "velocity":
+                    return player.Velocity.ToString();
+                case "team":
+                    return player.Role.Team.ToString();
+                case "role":
+                    return player.Role.Type.ToString();
+                case "leadingteam":
+                    return player.LeadingTeam.ToString();
+                case "IsCuffed":
+                    return player.IsCuffed.ToString();
                 case "x":
                     return player.Position.x.ToString();
                 case "y":

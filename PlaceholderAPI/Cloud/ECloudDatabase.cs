@@ -133,8 +133,8 @@
 
                 foreach (ECloudExpansion item in items)
                 {
-                    Log.Debug($"Processing item: {item.Id} - {item.RepoId}");
-                    RankCache[item.Id] = item.RepoId;
+                    Log.Debug($"Processing item: {item.Id} - {item.repoid}");
+                    RankCache[item.Id] = item.repoid;
                 }
 
                 File.WriteAllText(DatabaseCachePath, data);
