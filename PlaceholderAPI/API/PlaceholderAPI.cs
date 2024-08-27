@@ -25,12 +25,12 @@
         /// <summary>
         /// Basic pattern used by the plugin to identify tags.
         /// </summary>
-        private const string Pattern = @"%(?<identifier>[a-zA-Z0-9]+)_(?<params>[^%]+)%";
+        private const string PlaceholderPattern = @"%(?<identifier>[a-zA-Z0-9]+)_(?<params>[^%]+)%";
 
         /// <summary>
         /// Pre-Compiled Regex that lets verify the Pattern.
         /// </summary>
-        private static readonly Regex Regex = new Regex(Pattern);
+        private static readonly Regex PlaceholderRegex = new Regex(PlaceholderPattern);
 
         /// <summary>
         /// Sets the placeholder of that player.
@@ -40,28 +40,41 @@
         /// <returns>The string with the placeholder replaced.</returns>
         public static string SetPlaceholders(Player player, string text)
         {
-            return Regex.Replace(text, match =>
+            return PlaceholderRegex.Replace(text, match =>
             {
                 string identifier = match.Groups["identifier"].Value;
                 string parameters = match.Groups["params"].Value;
+
                 if (Placeholders.TryGetValue(identifier, out PlaceholderExpansion replacement))
                 {
-                    bool isPlayerBased = replacement.GetType().GetMethod("OnRequest", BindingFlags.Public | BindingFlags.Instance)?.DeclaringType != typeof(PlaceholderExpansion);
-                    bool isOfflineBased = replacement.GetType().GetMethod("OnOfflineRequest", BindingFlags.Public | BindingFlags.Instance)?.DeclaringType != typeof(PlaceholderExpansion);
+                    bool hasPlayerBased = replacement.GetType().GetMethod("OnRequest", BindingFlags.Public | BindingFlags.Instance)?.DeclaringType != typeof(PlaceholderExpansion);
+                    bool hasOfflineBased = replacement.GetType().GetMethod("OnOfflineRequest", BindingFlags.Public | BindingFlags.Instance)?.DeclaringType != typeof(PlaceholderExpansion);
 
-                    if (isPlayerBased)
+                    if (hasPlayerBased)
                     {
-                        return replacement.OnRequest(player, parameters) ?? "NaN";
+                        string result = replacement.OnRequest(player, parameters);
+                        if (result != null)
+                        {
+                            return result;
+                        }
                     }
-                    else if (isOfflineBased)
+
+                    if (hasOfflineBased)
                     {
-                        return replacement.OnOfflineRequest(parameters) ?? "NaN";
+                        string result = replacement.OnOfflineRequest(parameters);
+                        if (result != null)
+                        {
+                            return result;
+                        }
                     }
-                    else
+
+                    if (hasPlayerBased || hasOfflineBased)
                     {
-                        Log.Warn($"The expansion {replacement.Identifier} has no methods for the placeholders please contact {replacement.Author}");
-                        return match.Value;
+                        return "NaN";
                     }
+
+                    Log.Warn($"The expansion {replacement.Identifier} has no valid methods for placeholders. Please contact {replacement.Author}.");
+                    return match.Value;
                 }
                 else
                 {
@@ -77,15 +90,12 @@
         /// <returns>The string with the placeholder replaced.</returns>
         public static string SetPlaceholders(string text)
         {
-            return Regex.Replace(text, match =>
+            return PlaceholderRegex.Replace(text, match =>
             {
                 string identifier = match.Groups["identifier"].Value;
                 string parameters = match.Groups["params"].Value;
                 if (Placeholders.TryGetValue(identifier, out PlaceholderExpansion replacement))
                 {
-                    /*string final = replacement.onRequest(player, parameters);
-                    return final == null ? "NaN" : final;*/
-
                     bool isOfflineBased = replacement.GetType().GetMethod("OnOfflineRequest", BindingFlags.Public | BindingFlags.Instance)?.DeclaringType != typeof(PlaceholderExpansion);
 
                     if (isOfflineBased)

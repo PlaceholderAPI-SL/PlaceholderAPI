@@ -1,6 +1,7 @@
 ﻿namespace PlaceholderAPI.Commands.Sub
 {
     using System;
+    using System.Linq;
     using CommandSystem;
     using Exiled.API.Features;
     using Exiled.Permissions.Extensions;
@@ -29,7 +30,7 @@
                 return false;
             }
 
-            response = $"[PAPI] {PlaceholderAPI.SetPlaceholders(Player.Get(sender), string.Join(" ", arguments))} %player_name% %server_ip%";
+            response = $"[PAPI] {PlaceholderAPI.SetPlaceholders(Player.Get(sender), string.Join(" ", arguments))}";
             return true;
         }
     }

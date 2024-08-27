@@ -104,6 +104,7 @@
     <Compile Include="Patches\BroadcastReplacementPatch.cs" />
     <Compile Include="Patches\CommandReplacementPatch.cs" />
     <Compile Include="Patches\HintReplacementPatch.cs" />
+    <Compile Include="Patches\PlayerReplacementPatch.cs" />
     <Compile Include="PlaceholderAPIConfig.cs" />
     <Compile Include="PlaceholderAPIPlugin.cs" />
     <Compile Include="Placeholders\ServerPlaceholders.cs" />
