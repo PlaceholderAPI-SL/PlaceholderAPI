@@ -25,12 +25,22 @@
         /// <summary>
         /// Basic pattern used by the plugin to identify tags.
         /// </summary>
-        private const string PlaceholderPattern = @"%(?<identifier>[a-zA-Z0-9]+)_(?<params>[^%]+)%";
+        private const string PlaceholderPattern = @"%(?<identifier>[a-zA-Z0-9]+)(?:_(?<params>[^%]*))?%";
+
+        /// <summary>
+        /// Basic pattern used for nested placeholders.
+        /// </summary>
+        private const string BracketPlaceholderPattern = @"\{(?<identifier>[a-zA-Z0-9]+)(?:_(?<params>[^{}]*))?\}";
 
         /// <summary>
         /// Pre-Compiled Regex that lets verify the Pattern.
         /// </summary>
         private static readonly Regex PlaceholderRegex = new Regex(PlaceholderPattern);
+
+        /// <summary>
+        /// Pre-Compiled Regex that lets verify the Pattern.
+        /// </summary>
+        private static readonly Regex BracketPlaceholderRegex = new Regex(BracketPlaceholderPattern);
 
         /// <summary>
         /// Sets the placeholder of that player.
@@ -91,6 +101,88 @@
         public static string SetPlaceholders(string text)
         {
             return PlaceholderRegex.Replace(text, match =>
+            {
+                string identifier = match.Groups["identifier"].Value;
+                string parameters = match.Groups["params"].Value;
+                if (Placeholders.TryGetValue(identifier, out PlaceholderExpansion replacement))
+                {
+                    bool isOfflineBased = replacement.GetType().GetMethod("OnOfflineRequest", BindingFlags.Public | BindingFlags.Instance)?.DeclaringType != typeof(PlaceholderExpansion);
+
+                    if (isOfflineBased)
+                    {
+                        return replacement.OnOfflineRequest(parameters) ?? "NaN";
+                    }
+                    else
+                    {
+                        return match.Value;
+                    }
+                }
+                else
+                {
+                    return match.Value;
+                }
+            });
+        }
+
+        /// <summary>
+        /// Sets the brackets placeholder of that player.
+        /// </summary>
+        /// <param name="player">The player to pass for the placeholders.</param>
+        /// <param name="text">The string that needs to be replaced the placeholders.</param>
+        /// <returns>The string with the placeholder replaced.</returns>
+        public static string SetBracketsPlaceholders(Player player, string text)
+        {
+            return BracketPlaceholderRegex.Replace(text, match =>
+            {
+                string identifier = match.Groups["identifier"].Value;
+                string parameters = match.Groups["params"].Value;
+
+                if (Placeholders.TryGetValue(identifier, out PlaceholderExpansion replacement))
+                {
+                    bool hasPlayerBased = replacement.GetType().GetMethod("OnRequest", BindingFlags.Public | BindingFlags.Instance)?.DeclaringType != typeof(PlaceholderExpansion);
+                    bool hasOfflineBased = replacement.GetType().GetMethod("OnOfflineRequest", BindingFlags.Public | BindingFlags.Instance)?.DeclaringType != typeof(PlaceholderExpansion);
+
+                    if (hasPlayerBased)
+                    {
+                        string result = replacement.OnRequest(player, parameters);
+                        if (result != null)
+                        {
+                            return result;
+                        }
+                    }
+
+                    if (hasOfflineBased)
+                    {
+                        string result = replacement.OnOfflineRequest(parameters);
+                        if (result != null)
+                        {
+                            return result;
+                        }
+                    }
+
+                    if (hasPlayerBased || hasOfflineBased)
+                    {
+                        return "NaN";
+                    }
+
+                    Log.Warn($"The expansion {replacement.Identifier} has no valid methods for placeholders. Please contact {replacement.Author}.");
+                    return match.Value;
+                }
+                else
+                {
+                    return match.Value;
+                }
+            });
+        }
+
+        /// <summary>
+        /// Sets the brackets placeholder without a player.
+        /// </summary>
+        /// <param name="text">The string that needs to be replaced the placeholders.</param>
+        /// <returns>The string with the placeholder replaced.</returns>
+        public static string SetBracketsPlaceholders(string text)
+        {
+            return BracketPlaceholderRegex.Replace(text, match =>
             {
                 string identifier = match.Groups["identifier"].Value;
                 string parameters = match.Groups["params"].Value;
