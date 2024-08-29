@@ -8,6 +8,7 @@
     /// Main Command for PAPI.
     /// </summary>
     [CommandHandler(typeof(RemoteAdminCommandHandler))]
+    [CommandHandler(typeof(GameConsoleCommandHandler))]
     public class PAPICommand : ParentCommand, IUsageProvider
     {
         /// <inheritdoc/>

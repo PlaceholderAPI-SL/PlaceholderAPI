@@ -21,7 +21,7 @@
         /// <returns>instruction to harmony.</returns>
         public static bool Prefix(Broadcast __instance, NetworkConnection conn, ref string data, ushort time, BroadcastFlags flags)
         {
-            if (PlaceholderAPIPlugin.Instance.Config.Harmony.TagsAllowed.TryGetValue("Broadcast", out bool value) && !value)
+            if (!PlaceholderAPIPlugin.Instance.Config.Harmony.Broadcast)
             {
                 return true;
             }
@@ -62,7 +62,7 @@
         /// <returns>instruction to harmony.</returns>
         public static bool Prefix(Broadcast __instance, ref string data, ushort time, BroadcastFlags flags)
         {
-            if (PlaceholderAPIPlugin.Instance.Config.Harmony.TagsAllowed.TryGetValue("Broadcast", out bool value) && !value)
+            if (!PlaceholderAPIPlugin.Instance.Config.Harmony.Broadcast)
             {
                 return true;
             }
@@ -70,14 +70,13 @@
             try
             {
                 data = PlaceholderAPI.SetPlaceholders(data);
-
-                return true;
             }
             catch (Exception e)
             {
                 Exiled.API.Features.Log.Error($"Error when trying to parse Broadcast:\n{e}");
-                return true;
             }
+
+            return true;
         }
     }
 }

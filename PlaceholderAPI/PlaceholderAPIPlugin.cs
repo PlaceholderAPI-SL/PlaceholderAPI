@@ -34,7 +34,7 @@
         public override string Name => "PlaceholderAPI";
 
         /// <inheritdoc/>
-        public override Version Version => new (1, 0, 1);
+        public override Version Version => new (1, 0, 2);
 
         /// <inheritdoc/>
         public override string Author => "NotZer0Two";
@@ -71,6 +71,14 @@
 
             new PlayerPlaceholders().Register();
             new ServerPlaceholders().Register();
+            new Scp0492Placeholder().Register();
+            new Scp049Placeholder().Register();
+            new Scp079Placeholder().Register();
+            new Scp096Placeholder().Register();
+            new Scp106Placeholder().Register();
+            new Scp173Placeholder().Register();
+            new Scp939Placeholder().Register();
+            new Scp3114Placeholder().Register();
 
             API.PlaceholderAPI.RegisterPlaceholdersFromExpansions();
             API.PlaceholderAPI.RegisterPlaceholdersFromPlugins();

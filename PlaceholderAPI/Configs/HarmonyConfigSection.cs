@@ -16,15 +16,27 @@ namespace PlaceholderAPI.Configs
         public bool isHarmonyEnabled { get; set; } = true;
 
         /// <summary>
-        /// Gets or sets harmony support.
+        /// Gets or sets a value indicating whether gets or sets harmony support for hints.
         /// </summary>
-        [Description("This allows you to enable / disable the patches you don't want the plugin to do")]
-        public Dictionary<string, bool> TagsAllowed { get; set; } = new ()
-        {
-            ["Hints"] = true,
-            ["Broadcast"] = true,
-            ["CommandInterpolation"] = true,
-        };
+        [Description("This allows you to enable / disable the hint patch")]
+        public bool Hints { get; set; } = true;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether gets or sets harmony support for Broadcast.
+        /// </summary>
+        [Description("This allows you to enable / disable the Broadcast patch")]
+        public bool Broadcast { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether gets or sets harmony support for Command Interpolation.
+        /// </summary>
+        [Description("This allows you to enable / disable the Command Interpolation patch")]
+        public bool CommandInterpolation { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether gets or sets harmony support for Command.
+        /// </summary>
+        [Description("This allows you to enable / disable the Commands modification patch")]
+        public bool Commands { get; set; } = true;
     }
 }

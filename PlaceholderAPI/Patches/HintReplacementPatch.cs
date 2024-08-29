@@ -20,7 +20,7 @@
         /// <returns>instruction to harmony.</returns>
         public static bool Prefix(HintDisplay __instance, Hints.Hint hint)
         {
-            if (PlaceholderAPIPlugin.Instance.Config.Harmony.TagsAllowed.TryGetValue("Hints", out bool value) && !value)
+            if (!PlaceholderAPIPlugin.Instance.Config.Harmony.Hints)
             {
                 return true;
             }
@@ -43,13 +43,13 @@
                 TextHint t = hint as TextHint;
 
                 t.Text = PlaceholderAPI.SetPlaceholders(player, t.Text);
-                return true;
             }
             catch (Exception e)
             {
                 Log.Error($"Error when trying to parse hint:\n{e}");
-                return true;
             }
+
+            return true;
         }
     }
 }

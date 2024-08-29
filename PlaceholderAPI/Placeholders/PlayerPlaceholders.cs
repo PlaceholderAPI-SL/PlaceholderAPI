@@ -54,7 +54,7 @@
                     return player.Role.Type.ToString();
                 case "leadingteam":
                     return player.LeadingTeam.ToString();
-                case "IsCuffed":
+                case "iscuffed":
                     return player.IsCuffed.ToString();
                 case "x":
                     return player.Position.x.ToString();
