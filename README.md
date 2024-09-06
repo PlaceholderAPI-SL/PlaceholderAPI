@@ -16,7 +16,7 @@
 [![releaseImg]][release] ![APIversionImg]
 
 # Information 
-PlaceholderAPI is a plugin for Exiled servers that allows server owners to display information from various plugins with a uniform format. 
+PlaceholderAPI is a plugin for Exiled servers that allows server owners to display information inside CommandInterpolation, Commands, Nicknames, PlayerInfo, Hints and various plugins with a uniform format. 
 
 Support for specific plugins are provided either by the plugin itself or through expansions. The expansions may be downloaded in-game through the PAPI Expansion Cloud. 
 
