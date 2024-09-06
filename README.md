@@ -28,6 +28,10 @@ Simply put the right placeholder format (i.e. `%player_name%`) inside whatever c
 
 And for any more detail check out the [wiki](https://github.com/PlaceholderAPI/PlaceholderAPI/wiki)
 
+### Examples
+
+![immagine(1)](https://github.com/user-attachments/assets/835df300-2262-4f4c-912b-24b85b83d11c)
+
 ## Contribute
 If you would like to contribute towards PlaceholderAPI you are free to do it.
 
