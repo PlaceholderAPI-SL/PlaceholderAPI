@@ -15,7 +15,7 @@
     /// </summary>
     public class ECloudDatabase
     {
-        private const string Url = "https://papi-website.vercel.app//api/user";
+        private const string Url = "https://papi-website.vercel.app/api/user";
         private const string DatabaseCacheFileName = "data.json";
         private const int CacheTimeInMinutes = 5;
 
