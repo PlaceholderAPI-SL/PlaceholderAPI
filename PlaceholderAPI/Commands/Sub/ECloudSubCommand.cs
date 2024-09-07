@@ -5,6 +5,7 @@
     using Exiled.API.Features;
     using Exiled.Permissions.Extensions;
     using PlaceholderAPI.Cloud;
+    using PlaceholderAPI.Cloud.Beans;
     using PlaceholderAPI.Cloud.Helper;
 
     /// <summary>
@@ -38,13 +39,19 @@
 
             ECloudDatabase.UpdateData();
 
-            if (arguments.Count < 0 || !ECloudDatabase.TryGetUrl(arguments.At(0), out long id))
+            if (arguments.Count < 0 || !ECloudDatabase.TryGetExpansion(arguments.At(0), out ECloudExpansion expansion))
             {
                 response = "[PAPI] The repository name is missing.";
                 return false;
             }
 
-            ECloudDownloader.Download(id);
+            if (!expansion.Verified && !PlaceholderAPIPlugin.Instance.Config.DownloadUnsafeFromEcloud)
+            {
+                response = "[PAPI] The repository is unsafe.";
+                return false;
+            }
+
+            ECloudDownloader.Download(expansion.RepoId);
 
             response = "[PAPI] Your Expansion is being downloaded";
             return true;

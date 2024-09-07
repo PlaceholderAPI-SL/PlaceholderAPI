@@ -61,22 +61,6 @@
                 request.Result = webRequest.downloadHandler.text;
                 request.Success = true;
                 request.Code = webRequest.responseCode;
-
-                // Content Not Modified
-                if (webRequest.responseCode == 304)
-                {
-                    Log.Debug($"{nameof(MakeRequest)}: Response: Not Modified Code: {request.Code}, using cache.");
-                }
-                else
-                {
-                    string newETag = webRequest.GetResponseHeader("Etag");
-                    if (!string.IsNullOrEmpty(newETag))
-                    {
-                        ECloudDatabase.SaveETag(newETag);
-                    }
-
-                    ECloudDatabase.ProcessData(request.Result);
-                }
             }
             else
             {
