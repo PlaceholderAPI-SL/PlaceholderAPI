@@ -3,18 +3,20 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
+    using System.Net.Http;
+    using System.Threading.Tasks;
     using Exiled.API.Features;
+    using Newtonsoft.Json;
     using PlaceholderAPI.Cloud.Beans;
-    using PlaceholderAPI.Cloud.Helper;
 
     /// <summary>
-    /// Basic for the ECloud.
+    /// Handles the caching and processing of the ECloud database.
     /// </summary>
     public class ECloudDatabase
     {
-        private const string Url = "https://raw.githubusercontent.com/PlaceholderAPI-SL/ECloud/main/data.yml";
-        private const string ETagCacheFileName = "ecloud_cache.txt";
-        private const string DatabaseCacheFileName = "data.yml";
+        private const string Url = "https://papi-website.vercel.app/api/user";
+        private const string DatabaseCacheFileName = "data.json";
         private const int CacheTimeInMinutes = 5;
 
         static ECloudDatabase()
@@ -26,38 +28,25 @@
                 return;
             }
 
-            // If the database cache file exists we process the data.
-            if (!File.Exists(DatabaseCachePath))
+            // If the database cache file exists, process the data.
+            if (File.Exists(DatabaseCachePath))
             {
-                return;
-            }
-
-            try
-            {
-                ProcessData(File.ReadAllText(DatabaseCachePath));
-
-                // If the ETag cache file exists we read the data.
-                if (File.Exists(ECachePath))
+                try
                 {
-                    ECache = File.ReadAllText(ECachePath);
+                    ProcessData(File.ReadAllText(DatabaseCachePath));
                 }
-            }
-            catch (Exception e)
-            {
-                Log.Error($"[ECloud Database] There was an error reading the cache files.");
-                Log.Error(e);
+                catch (Exception e)
+                {
+                    Log.Error("[ECloud Database] There was an error reading the cache files.");
+                    Log.Error(e);
+                }
             }
         }
 
         /// <summary>
         /// Gets the path to the cache directory.
         /// </summary>
-        private static DirectoryInfo CacheDirectory { get; } = new (Path.Combine(Paths.Configs, "CacheEcloud"));
-
-        /// <summary>
-        /// Gets the path to the cache file.
-        /// </summary>
-        private static string ECachePath { get; } = Path.Combine(CacheDirectory.FullName, ETagCacheFileName);
+        private static DirectoryInfo CacheDirectory { get; } = new(Path.Combine(Paths.Configs, "CacheEcloud"));
 
         /// <summary>
         /// Gets the path to the database cache file.
@@ -65,84 +54,114 @@
         private static string DatabaseCachePath { get; } = Path.Combine(CacheDirectory.FullName, DatabaseCacheFileName);
 
         /// <summary>
-        /// Gets a <see cref="Dictionary{TKey,TValue}"/> of recently cached userIds and their ranks.
+        /// Stores expansions with their IDs as keys.
         /// </summary>
-        private static Dictionary<string, long> RankCache { get; } = new ();
-
-        /// <summary>
-        /// Gets or sets the ETag cache.
-        /// </summary>
-        private static string ECache { get; set; } = string.Empty;
+        private static Dictionary<string, ECloudExpansion> ExpansionsCache { get; } = new();
 
         /// <summary>
         /// Gets or sets the last time the database was updated.
         /// </summary>
         private static DateTime LastUpdate { get; set; } = DateTime.MinValue;
 
+
         /// <summary>
-        /// Tries to get the rank of a user from the cache.
+        /// Clears the cache, including the in-memory data and the stored cache files.
         /// </summary>
-        /// <param name="id">The user's id.</param>
-        /// <param name="url">The rank of the user.</param>
-        /// <returns>Returns a value indicating whether the rank was found.</returns>
-        public static bool TryGetUrl(string id, out long url)
+        public static void ClearCache()
         {
-            return RankCache.TryGetValue(id, out url);
+            try
+            {
+                ExpansionsCache.Clear();
+                Log.Debug("Cleared in-memory expansions cache.");
+
+                if (File.Exists(DatabaseCachePath))
+                {
+                    File.Delete(DatabaseCachePath);
+                    Log.Debug("Deleted cached database file.");
+                }
+
+                LastUpdate = DateTime.MinValue;
+                Log.Debug("Reset last update time.");
+            }
+            catch (Exception e)
+            {
+                Log.Error("[ECloud Database] Error clearing the cache.");
+                Log.Error(e);
+            }
+        }
+
+        /// <summary>
+        /// Tries to get the expansion by its name.
+        /// </summary>
+        /// <param name="name">The name of the expansion.</param>
+        /// <param name="expansion">The expansion, if found.</param>
+        /// <returns>Returns true if the expansion was found, otherwise false.</returns>
+        public static bool TryGetExpansion(string name, out ECloudExpansion expansion)
+        {
+            expansion = ExpansionsCache.Values.FirstOrDefault(e => e.Id.Equals(name, StringComparison.OrdinalIgnoreCase));
+            return expansion != null;
         }
 
         /// <summary>
         /// Updates the data from the database.
         /// </summary>
-        public static void UpdateData()
+        public static async void UpdateData()
         {
             if (DateTime.Now - LastUpdate < TimeSpan.FromMinutes(CacheTimeInMinutes))
             {
                 return;
             }
 
-            ThreadSafeRequest.Go(Url, ECache);
-            LastUpdate = DateTime.Now;
+            try
+            {
+                using HttpClient client = new();
+                string response = await client.GetStringAsync(Url);
+
+                if (!string.IsNullOrEmpty(response))
+                {
+                    ProcessData(response);
+                    LastUpdate = DateTime.Now;
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error($"[ECloud Database] Failed to update data from {Url}.");
+                Log.Error(e);
+            }
         }
 
         /// <summary>
-        /// Saves the ETag to the cache.
-        /// </summary>
-        /// <param name="etag">The ETag to save.</param>
-        public static void SaveETag(string etag)
-        {
-            ECache = etag;
-            File.WriteAllText(ECachePath, etag);
-            Log.Debug($"{nameof(SaveETag)}: Successfully saved the ETag to the cache.");
-        }
-
-        /// <summary>
-        /// Processes the data from the database.
+        /// Processes the data from the API.
         /// </summary>
         /// <param name="data">The data to process.</param>
         public static void ProcessData(string data)
         {
             try
             {
-                ECloudExpansion[] items = ECloudExpansion.FromYaml(data);
+                // Deserialize JSON data to an array of expansions using Newtonsoft.Json
+                ECloudExpansion[] items = JsonConvert.DeserializeObject<ECloudExpansion[]>(data);
 
-                if (items is null || items.Length == 0)
+                if (items == null || items.Length == 0)
                 {
                     Log.Debug("No items found in the database.");
                     return;
                 }
 
+                // Clear the existing cache and populate it with new data
+                ExpansionsCache.Clear();
                 foreach (ECloudExpansion item in items)
                 {
-                    Log.Debug($"Processing item: {item.Id} - {item.repoid}");
-                    RankCache[item.Id] = item.repoid;
+                    Log.Debug($"Processing item: {item.Id} - {item.RepoId}");
+                    ExpansionsCache[item.Id] = item;
                 }
 
+                // Save the processed data to the cache
                 File.WriteAllText(DatabaseCachePath, data);
                 Log.Debug($"{nameof(ProcessData)}: Successfully processed the data from the database.");
             }
             catch (Exception e)
             {
-                Log.Error("There was an error processing the data from the database.");
+                Log.Error("[ECloud Database] There was an error processing the data from the database.");
                 Log.Error(e);
             }
         }

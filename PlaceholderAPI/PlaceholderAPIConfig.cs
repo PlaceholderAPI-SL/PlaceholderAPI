@@ -23,6 +23,12 @@
         public bool ConnectToEcloud { get; set; } = true;
 
         /// <summary>
+        /// Gets or sets a value indicating whether if to download unsafe expansions from the ECloud.
+        /// </summary>
+        [Description("It allows you to download unverified expansions from the ECloud")]
+        public bool DownloadUnsafeFromEcloud { get; set; } = false;
+
+        /// <summary>
         /// Gets or sets a value indicating whether if Harmony config section.
         /// </summary>
         [Description("Config section releated to modify in-game aspects")]
