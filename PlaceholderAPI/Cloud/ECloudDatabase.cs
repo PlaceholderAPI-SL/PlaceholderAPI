@@ -63,6 +63,33 @@
         /// </summary>
         private static DateTime LastUpdate { get; set; } = DateTime.MinValue;
 
+
+        /// <summary>
+        /// Clears the cache, including the in-memory data and the stored cache files.
+        /// </summary>
+        public static void ClearCache()
+        {
+            try
+            {
+                ExpansionsCache.Clear();
+                Log.Debug("Cleared in-memory expansions cache.");
+
+                if (File.Exists(DatabaseCachePath))
+                {
+                    File.Delete(DatabaseCachePath);
+                    Log.Debug("Deleted cached database file.");
+                }
+
+                LastUpdate = DateTime.MinValue;
+                Log.Debug("Reset last update time.");
+            }
+            catch (Exception e)
+            {
+                Log.Error("[ECloud Database] Error clearing the cache.");
+                Log.Error(e);
+            }
+        }
+
         /// <summary>
         /// Tries to get the expansion by its name.
         /// </summary>

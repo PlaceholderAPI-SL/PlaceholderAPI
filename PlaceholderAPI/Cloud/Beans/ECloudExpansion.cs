@@ -20,6 +20,18 @@
         public bool Verified { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether gets or sets whether the Expansion is Internal.
+        /// </summary>
+        [JsonProperty("internal")]
+        public bool Internal { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether gets or sets whether the Expansion is Hidden.
+        /// </summary>
+        [JsonProperty("isHidden")]
+        public bool Hidden { get; set; }
+
+        /// <summary>
         /// Gets or sets the GitHub URL of the Expansion.
         /// </summary>
         [JsonProperty("github")]
@@ -42,6 +54,12 @@
         /// </summary>
         [JsonProperty("gitid")]
         public long RepoId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Repo ID of the Expansion.
+        /// </summary>
+        [JsonProperty("placeholders")]
+        public string[] Placeholders { get; set; }
 
         /// <summary>
         /// Converts JSON string into an array of <see cref="ECloudExpansion"/>.
