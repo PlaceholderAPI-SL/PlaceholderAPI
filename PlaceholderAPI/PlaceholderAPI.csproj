@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -115,6 +116,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\Abstract\PlaceholderExpansion.cs" />
+    <Compile Include="API\IRelational.cs" />
     <Compile Include="API\PlaceholderAPI.cs" />
     <Compile Include="Cloud\Beans\ECloudExpansion.cs" />
     <Compile Include="Cloud\ECloudDatabase.cs" />
@@ -142,6 +144,7 @@
     <Compile Include="Placeholders\Scp106Placeholder.cs" />
     <Compile Include="Placeholders\ServerPlaceholders.cs" />
     <Compile Include="Placeholders\PlayerPlaceholders.cs" />
+    <Compile Include="Placeholders\TestPlaceholder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -45,6 +45,21 @@
         // - Zer0Two
         public override PluginPriority Priority => PluginPriority.Last;
 
+        /// <summary>
+        /// Gets a value indicating whether if the plugins is a PreRelease.
+        /// </summary>
+        public bool PreRelease
+        {
+            get
+            {
+#if DEBUG
+                return true;
+#else
+            return false;
+#endif
+            }
+        }
+
         /// <inheritdoc/>
         public override void OnEnabled()
         {
@@ -79,6 +94,11 @@
             new Scp173Placeholder().Register();
             new Scp939Placeholder().Register();
             new Scp3114Placeholder().Register();
+
+            if (this.PreRelease)
+            {
+                new TestPlaceholder().Register();
+            }
 
             API.PlaceholderAPI.RegisterPlaceholdersFromExpansions();
             API.PlaceholderAPI.RegisterPlaceholdersFromPlugins();

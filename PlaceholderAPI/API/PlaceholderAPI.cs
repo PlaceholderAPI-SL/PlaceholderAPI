@@ -25,12 +25,12 @@
         /// <summary>
         /// Basic pattern used by the plugin to identify tags.
         /// </summary>
-        private const string PlaceholderPattern = @"%(?<identifier>[a-zA-Z0-9]+)(?:_(?<params>[^%]*))?%";
+        private const string PlaceholderPattern = @"%(rel_)?(?<identifier>[a-zA-Z0-9]+)(?:_(?<params>[^%]*))?%";
 
         /// <summary>
         /// Basic pattern used for nested placeholders.
         /// </summary>
-        private const string BracketPlaceholderPattern = @"\{(?<identifier>[a-zA-Z0-9]+)(?:_(?<params>[^{}]*))?\}";
+        private const string BracketPlaceholderPattern = @"\{(rel_)?(?<identifier>[a-zA-Z0-9]+)(?:_(?<params>[^{}]*))?\}";
 
         /// <summary>
         /// Pre-Compiled Regex that lets verify the Pattern.
@@ -46,17 +46,35 @@
         /// Sets the placeholder of that player.
         /// </summary>
         /// <param name="player">The player to pass for the placeholders.</param>
-        /// <param name="text">The string that needs to be replaced the placeholders.</param>
+        /// <param name="text">The string that needs to be replaced with the placeholders.</param>
+        /// <param name="secondPlayer">Optional second player for relational placeholders.</param>
         /// <returns>The string with the placeholder replaced.</returns>
-        public static string SetPlaceholders(Player player, string text)
+        public static string SetPlaceholders(Player player, string text, Player secondPlayer = null)
         {
             return PlaceholderRegex.Replace(text, match =>
             {
                 string identifier = match.Groups["identifier"].Value;
                 string parameters = match.Groups["params"].Value;
 
+                // Check if it's a relational placeholder (if the "rel_" prefix is present)
+                bool isRelational = match.Groups[1].Success;
+
                 if (Placeholders.TryGetValue(identifier, out PlaceholderExpansion replacement))
                 {
+                    if (isRelational && secondPlayer != null && replacement is IRelational relationalExpansion)
+                    {
+                        // Relational placeholder logic
+                        string result = relationalExpansion.OnRequest(player, secondPlayer, parameters);
+                        if (result != null)
+                        {
+                            return result;
+                        }
+
+                        Log.Warn($"The relational expansion {replacement.Identifier} returned null for the relational request.");
+                        return "NaN";
+                    }
+
+                    // Player-based placeholder logic
                     bool hasPlayerBased = replacement.GetType().GetMethod("OnRequest", BindingFlags.Public | BindingFlags.Instance)?.DeclaringType != typeof(PlaceholderExpansion);
                     bool hasOfflineBased = replacement.GetType().GetMethod("OnOfflineRequest", BindingFlags.Public | BindingFlags.Instance)?.DeclaringType != typeof(PlaceholderExpansion);
 
@@ -129,16 +147,32 @@
         /// </summary>
         /// <param name="player">The player to pass for the placeholders.</param>
         /// <param name="text">The string that needs to be replaced the placeholders.</param>
+        /// <param name="secondPlayer">Optional second player for relational placeholders.</param>
         /// <returns>The string with the placeholder replaced.</returns>
-        public static string SetBracketsPlaceholders(Player player, string text)
+        public static string SetBracketsPlaceholders(Player player, string text, Player secondPlayer = null)
         {
             return BracketPlaceholderRegex.Replace(text, match =>
             {
                 string identifier = match.Groups["identifier"].Value;
                 string parameters = match.Groups["params"].Value;
 
+                bool isRelational = match.Groups[1].Success;
+
                 if (Placeholders.TryGetValue(identifier, out PlaceholderExpansion replacement))
                 {
+                    if (isRelational && secondPlayer != null && replacement is IRelational relationalExpansion)
+                    {
+                        // Relational placeholder logic
+                        string result = relationalExpansion.OnRequest(player, secondPlayer, parameters);
+                        if (result != null)
+                        {
+                            return result;
+                        }
+
+                        Log.Warn($"The relational expansion {replacement.Identifier} returned null for the relational request.");
+                        return "NaN";
+                    }
+
                     bool hasPlayerBased = replacement.GetType().GetMethod("OnRequest", BindingFlags.Public | BindingFlags.Instance)?.DeclaringType != typeof(PlaceholderExpansion);
                     bool hasOfflineBased = replacement.GetType().GetMethod("OnOfflineRequest", BindingFlags.Public | BindingFlags.Instance)?.DeclaringType != typeof(PlaceholderExpansion);
 
@@ -198,6 +232,52 @@
                     {
                         return match.Value;
                     }
+                }
+                else
+                {
+                    return match.Value;
+                }
+            });
+        }
+
+        /// <summary>
+        /// Sets the placeholders, including relational placeholders between two players.
+        /// </summary>
+        /// <param name="one">The first player for the placeholders.</param>
+        /// <param name="two">The second player for relational placeholders.</param>
+        /// <param name="text">The string that needs to have placeholders replaced.</param>
+        /// <returns>The string with the placeholders replaced.</returns>
+        public static string SetRelationalPlaceholders(Player one, Player two, string text)
+        {
+            return PlaceholderRegex.Replace(text, match =>
+            {
+                string identifier = match.Groups["identifier"].Value;
+                string parameters = match.Groups["params"].Value;
+
+                bool isRelational = match.Groups[1].Success;
+
+                if (Placeholders.TryGetValue(identifier, out PlaceholderExpansion replacement))
+                {
+                    if (isRelational && replacement is IRelational relationalExpansion)
+                    {
+                        string result = relationalExpansion.OnRequest(one, two, parameters);
+                        if (result != null)
+                        {
+                            return result;
+                        }
+
+                        return "NaN";
+                    }
+                    else if (!isRelational)
+                    {
+                        string result = replacement.OnRequest(one, parameters);
+                        if (result != null)
+                        {
+                            return result;
+                        }
+                    }
+
+                    return match.Value;
                 }
                 else
                 {
