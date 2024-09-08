@@ -70,7 +70,6 @@
                             return result;
                         }
 
-                        Log.Warn($"The relational expansion {replacement.Identifier} returned null for the relational request.");
                         return "NaN";
                     }
 
@@ -169,7 +168,6 @@
                             return result;
                         }
 
-                        Log.Warn($"The relational expansion {replacement.Identifier} returned null for the relational request.");
                         return "NaN";
                     }
 
