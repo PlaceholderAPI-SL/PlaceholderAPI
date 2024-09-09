@@ -26,7 +26,7 @@ Support for specific plugins are provided either by the plugin itself or through
 Using the placeholders of the Expansion / Plugins is a straigh forward process.  
 Simply put the right placeholder format (i.e. `%player_name%`) inside whatever configuration option supports it. Please refer to any manuals or wikis a plugin may offer about what options support placeholders.
 
-And for any more detail check out the [wiki](https://github.com/PlaceholderAPI/PlaceholderAPI/wiki)
+And for any more detail check out the [wiki](https://github.com/PlaceholderAPI-SL/PlaceholderAPI/wiki)
 
 ### Examples
 
