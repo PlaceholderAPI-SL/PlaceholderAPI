@@ -24,6 +24,11 @@
                 return true;
             }
 
+            if (string.IsNullOrEmpty(value))
+            {
+                return true;
+            }
+
             try
             {
                 Player player = Player.Get(__instance._hub);
@@ -59,6 +64,11 @@
                 return true;
             }
 
+            if (string.IsNullOrEmpty(value))
+            {
+                return true;
+            }
+
             try
             {
                 Player player = Player.Get(__instance._hub);
@@ -89,6 +99,11 @@
         public static bool Prefix(ServerRoles __instance, ref string i)
         {
             if (!PlaceholderAPIPlugin.Instance.Config.Harmony.Commands)
+            {
+                return true;
+            }
+
+            if (string.IsNullOrEmpty(i))
             {
                 return true;
             }
