@@ -10,17 +10,16 @@
 [![logo]]
 
 # Information 
-PlaceholderAPI is a plugin for Exiled servers that allows server owners to display information inside CommandInterpolation, Commands, Nicknames, PlayerInfo, Hints and various plugins with a uniform format. 
+PlaceholderAPI is a plugin for Exiled servers that lets server owners show dynamic information in things like commands, nicknames, player info, and other plugins. It uses a standard format to make it easy.
 
-Support for specific plugins are provided either by the plugin itself or through expansions. The expansions may be downloaded in-game through the PAPI Expansion Cloud. 
+Some plugins support placeholders on their own, but others need expansions. These expansions can be downloaded directly in-game through the PAPI Expansion Cloud.
 
 (This isn't the original project but a porting from Minecraft to SCP:SL)
 
 ## Use Expansion
-Using the placeholders of the Expansion / Plugins is a straigh forward process.  
-Simply put the right placeholder format (i.e. `%player_name%`) inside whatever configuration option supports it. Please refer to any manuals or wikis a plugin may offer about what options support placeholders.
+Using placeholders from plugins or expansions is simple. Just place the right placeholder format (like %player_name%) in any setting that supports it. Check the plugin's manual or wiki to see where placeholders can be used.
 
-And for any more detail check out the [wiki](https://github.com/PlaceholderAPI-SL/PlaceholderAPI/wiki)
+For more details, you can always visit the [wiki](https://github.com/PlaceholderAPI-SL/PlaceholderAPI/wiki)
 
 ### Examples
 
