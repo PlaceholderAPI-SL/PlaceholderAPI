@@ -1,19 +1,13 @@
 [issues]: https://github.com/PlaceholderAPI-SL/PlaceholderAPI/issues
 
-[releaseImg]: https://img.shields.io/github/release/PlaceholderAPI/PlaceholderAPI.svg?label=github%20release
-[release]: https://github.com/PlaceholderAPI-SL/PlaceholderAPI/releases/latest
-
 [discord]: https://discord.gg/e3rXWCUWtw
 [Expansions cloud]: https://github.com/PlaceholderAPI-SL/ECloud
 [placeholder list]: https://github.com/PlaceholderAPI-SL/PlaceholderAPI/wiki
 
-[APIversionImg]: https://img.shields.io/nexus/placeholderapi/me.clip/placeholderapi?server=https%3A%2F%2Frepo.extendedclip.com&label=API%20Version
-[logo]: https://wiki.placeholderapi.com/assets/img/papi-logo.png
+[logo]: https://i.imgur.com/ZZiCsS9.png
 <!-- The stuff above isn't visible in the readme -->
 
 [![logo]]
-
-[![releaseImg]][release] ![APIversionImg]
 
 # Information 
 PlaceholderAPI is a plugin for Exiled servers that allows server owners to display information inside CommandInterpolation, Commands, Nicknames, PlayerInfo, Hints and various plugins with a uniform format. 
