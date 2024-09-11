@@ -135,7 +135,7 @@
                         return false;
                     }
 
-                    response = $"\nInformation retrived for {expansion2.Id}:" +
+                    response = $"\nInformation retrived for {expansion2.Id}{(expansion2.Hidden ? " (Hidden)" : string.Empty)}:" +
                                $"\n  Verified: {(expansion2.Verified ? "Yes" : "NO")}" +
                                $"\n  Link: {expansion2.GitHub}" +
                                $"\n  Owner: {expansion2.DiscordId}" +
