@@ -77,8 +77,8 @@
                     response = "[PAPI] Your Expansion is being downloaded";
                     return true;
 
-                case "forceupdate":
-                    if (!sender.CheckPermission("papi.ecloud.download"))
+                case "refresh":
+                    if (!sender.CheckPermission("papi.ecloud.refresh"))
                     {
                         response = "[PAPI] You don't have enough permission";
                         return false;
@@ -94,8 +94,55 @@
                     ECloudDatabase.ClearCache();
 
                     ECloudDatabase.UpdateData();
-                    response = "[PAPI] Cache is cleaned";
+                    response = "[PAPI] Cache has been refreshed";
                     return true;
+
+                case "clear":
+                    if (!sender.CheckPermission("papi.ecloud.clear"))
+                    {
+                        response = "[PAPI] You don't have enough permission";
+                        return false;
+                    }
+
+                    if (!PlaceholderAPIPlugin.Instance.Config.ConnectToEcloud)
+                    {
+                        response = "[PAPI] The ECloud is disabled from the Config";
+                        return false;
+                    }
+
+
+                    ECloudDatabase.ClearCache();
+
+                    response = "[PAPI] Cache has been cleared";
+                    return true;
+
+                case "info":
+                    if (!sender.CheckPermission("papi.ecloud.info"))
+                    {
+                        response = "[PAPI] You don't have enough permission";
+                        return false;
+                    }
+
+                    if (!PlaceholderAPIPlugin.Instance.Config.ConnectToEcloud)
+                    {
+                        response = "[PAPI] The ECloud is disabled from the Config";
+                        return false;
+                    }
+
+                    if (arguments.Count < 2 || !ECloudDatabase.TryGetExpansion(arguments.At(1), out ECloudExpansion expansion2))
+                    {
+                        response = "[PAPI] The repository name is missing.";
+                        return false;
+                    }
+
+                    response = $"\nInformation retrived for {expansion2.Id}:" +
+                               $"\n  Verified: {(expansion2.Verified ? "Yes" : "NO")}" +
+                               $"\n  Link: {expansion2.GitHub}" +
+                               $"\n  Owner: {expansion2.DiscordId}" +
+                               $"\n  Internal: {(expansion2.Internal ? "Yes" : "NO")}";
+                    return true;
+
+
 
                 default:
                     response = "[PAPI] This subcommand doesn't exist";
