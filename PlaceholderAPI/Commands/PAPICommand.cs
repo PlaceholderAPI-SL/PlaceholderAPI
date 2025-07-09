@@ -9,6 +9,7 @@
     /// </summary>
     [CommandHandler(typeof(RemoteAdminCommandHandler))]
     [CommandHandler(typeof(GameConsoleCommandHandler))]
+    [CommandHandler(typeof(ClientCommandHandler))]
     public class PAPICommand : ParentCommand, IUsageProvider
     {
         /// <inheritdoc/>

@@ -62,6 +62,24 @@
                     return player.Position.y.ToString();
                 case "z":
                     return player.Position.z.ToString();
+                case "emotion":
+                    return player.Emotion.ToString();
+                case "zone":
+                    return player.Zone.ToString();
+                case "room":
+                    return player.CurrentRoom.Type.ToString();
+                case "previousrole":
+                    return player.PreviousRole.ToString();
+                case "outofbounds":
+                    return player.RelativePosition.OutOfRange.ToString();
+                case "rank":
+                    return player.RankName;
+                case "rankcolor":
+                    return player.RankColor;
+                case "scale":
+                    return player.Scale.ToString();
+                case "globalbadge":
+                    return player.GlobalBadge?.Text;
             }
 
             return null;

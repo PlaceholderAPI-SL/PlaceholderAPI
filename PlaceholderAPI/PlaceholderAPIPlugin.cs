@@ -34,7 +34,7 @@
         public override string Name => "PlaceholderAPI";
 
         /// <inheritdoc/>
-        public override Version Version => new (1, 0, 3);
+        public override Version Version => new (1, 0, 4);
 
         /// <inheritdoc/>
         public override string Author => "NotZer0Two";
@@ -44,6 +44,21 @@
         // So in this way i know that if the Placeholders are searching for a plugin that one is loaded 100%
         // - Zer0Two
         public override PluginPriority Priority => PluginPriority.Last;
+
+        /// <summary>
+        /// Gets a value indicating whether if the plugins is a PreRelease.
+        /// </summary>
+        public bool PreRelease
+        {
+            get
+            {
+#if DEBUG
+                return true;
+#else
+            return false;
+#endif
+            }
+        }
 
         /// <inheritdoc/>
         public override void OnEnabled()
@@ -79,6 +94,11 @@
             new Scp173Placeholder().Register();
             new Scp939Placeholder().Register();
             new Scp3114Placeholder().Register();
+
+            if (this.PreRelease)
+            {
+                new TestPlaceholder().Register();
+            }
 
             API.PlaceholderAPI.RegisterPlaceholdersFromExpansions();
             API.PlaceholderAPI.RegisterPlaceholdersFromPlugins();
