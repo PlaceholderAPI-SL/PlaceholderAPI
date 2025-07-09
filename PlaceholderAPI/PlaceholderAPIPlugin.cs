@@ -34,7 +34,7 @@
         public override string Name => "PlaceholderAPI";
 
         /// <inheritdoc/>
-        public override Version Version => new (1, 0, 3);
+        public override Version Version => new (1, 0, 4);
 
         /// <inheritdoc/>
         public override string Author => "NotZer0Two";
